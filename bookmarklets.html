@@ -435,7 +435,40 @@
                 </div>
                 
                 <div class="bookmarklet-container">
-                    <a href="javascript:(function(){const url=window.location.href;if(!url.includes('mangafire.to/manga/')){alert('Please run this on a MangaFire manga page!');return;}const titleElement=document.querySelector('h1')||document.querySelector('title');const mangaName=titleElement?titleElement.textContent.trim():'Unknown Manga';const mangaId=url.split('/manga/')[1].split('/')[0].split('?')[0];fetch(window.location.origin.replace('mangafire.to','nadavbendov.top')+'/api',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'add_manga',name:mangaName,url:url,id:mangaId})}).then(response=>response.text()).then(responseText=>{try{const result=JSON.parse(responseText);alert(result.message||'Added successfully!');}catch(e){alert('✅ Added to tracker successfully!');}}).catch(error=>alert('Error: '+error.message));})();" class="bookmarklet-button">
+                    <a href="javascript:(function(){
+  const url=window.location.href;
+  if(!url.includes('mangafire.to/manga/')){
+    alert('Please run this on a MangaFire manga page!');
+    return;
+  }
+  
+  const titleElement=document.querySelector('h1')||document.querySelector('title');
+  const mangaName=titleElement?titleElement.textContent.trim():'Unknown Manga';
+  const mangaId=url.split('/manga/')[1].split('/')[0].split('?')[0];
+  
+  fetch('https://nadavbendov.top/api',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      action:'add_manga',
+      name:mangaName,
+      url:url,
+      id:mangaId
+    })
+  })
+  .then(response=>response.text())
+  .then(responseText=>{
+    try{
+      const result=JSON.parse(responseText);
+      alert(result.message||'Added successfully!');
+    }catch(e){
+      alert('✅ Added to tracker successfully!');
+    }
+  })
+  .catch(error=>{
+    alert('Error: '+error.message);
+  });
+})();" class="bookmarklet-button">
                         📚 Add to Tracker
                     </a>
                 </div>
@@ -446,7 +479,38 @@
                 <p>Use this bookmarklet to quickly remove manga from your tracking list while browsing:</p>
                 
                 <div class="bookmarklet-container">
-                    <a href="javascript:(function(){const url=window.location.href;if(!url.includes('mangafire.to/manga/')){alert('Please run this on a MangaFire manga page!');return;}const mangaId=url.split('/manga/')[1].split('/')[0].split('?')[0];if(confirm('Remove this manga from tracking?')){fetch(window.location.origin.replace('mangafire.to','nadavbendov.top')+'/api',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'remove_manga',id:mangaId})}).then(response=>response.text()).then(responseText=>{try{const result=JSON.parse(responseText);alert(result.message||'Removed successfully!');}catch(e){alert('✅ Removed from tracker successfully!');}}).catch(error=>alert('Error: '+error.message));}})();" class="bookmarklet-button remove-button">
+                    <a href="javascript:(function(){
+  const url=window.location.href;
+  if(!url.includes('mangafire.to/manga/')){
+    alert('Please run this on a MangaFire manga page!');
+    return;
+  }
+  
+  const mangaId=url.split('/manga/')[1].split('/')[0].split('?')[0];
+  
+  if(confirm('Remove this manga from tracking?')){
+    fetch('https://nadavbendov.top/api',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        action:'remove_manga',
+        id:mangaId
+      })
+    })
+    .then(response=>response.text())
+    .then(responseText=>{
+      try{
+        const result=JSON.parse(responseText);
+        alert(result.message||'Removed successfully!');
+      }catch(e){
+        alert('✅ Removed from tracker successfully!');
+      }
+    })
+    .catch(error=>{
+      alert('Error: '+error.message);
+    });
+  }
+})();" class="bookmarklet-button remove-button">
                         🗑️ Remove from Tracker
                     </a>
                 </div>
