@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MangaFire Tracker - Bookmarklets</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* Animated background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .floating-shape {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 8s ease-in-out infinite;
+        }
+        
+        .floating-shape:nth-child(1) { 
+            width: 60px; height: 60px; top: 10%; left: 15%; 
+            animation-delay: 0s; animation-duration: 6s; 
+        }
+        .floating-shape:nth-child(2) { 
+            width: 40px; height: 40px; top: 70%; left: 85%; 
+            animation-delay: 2s; animation-duration: 8s; 
+        }
+        .floating-shape:nth-child(3) { 
+            width: 80px; height: 80px; top: 40%; left: 80%; 
+            animation-delay: 4s; animation-duration: 10s; 
+        }
+        .floating-shape:nth-child(4) { 
+            width: 30px; height: 30px; top: 80%; left: 10%; 
+            animation-delay: 1s; animation-duration: 7s; 
+        }
+        
+        @keyframes float {
+            0%, 100% { 
+                transform: translateY(0px) translateX(0px) rotate(0deg); 
+                opacity: 0.3; 
+            }
+            33% { 
+                transform: translateY(-30px) translateX(20px) rotate(120deg); 
+                opacity: 0.6; 
+            }
+            66% { 
+                transform: translateY(20px) translateX(-15px) rotate(240deg); 
+                opacity: 0.4; 
+            }
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: slideDown 0.8s ease-out;
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        
+        .header .subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.2rem;
+            font-weight: 300;
+        }
+        
+        .nav-section {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: slideUp 0.8s ease-out 0.2s both;
+        }
+        
+        .nav-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+        }
+        
+        .main-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            animation: slideUp 0.8s ease-out 0.4s both;
+        }
+        
+        .step-section {
+            background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
+            border-left: 4px solid #667eea;
+            padding: 32px;
+            margin: 32px 0;
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .step-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+            transition: left 0.8s ease;
+        }
+        
+        .step-section:hover::before {
+            left: 100%;
+        }
+        
+        .step-section:hover {
+            transform: translateX(8px);
+            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.2);
+        }
+        
+        .step-section h3 {
+            color: #2c3e50;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .step-section p {
+            color: #6c757d;
+            line-height: 1.6;
+            margin-bottom: 24px;
+            font-size: 1.1rem;
+        }
+        
+        .bookmarklet-container {
+            text-align: center;
+            margin: 24px 0;
+        }
+        
+        .bookmarklet-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 32px;
+            text-decoration: none;
+            border-radius: 16px;
+            font-weight: 700;
+            font-size: 16px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.4);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .bookmarklet-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.6s ease;
+        }
+        
+        .bookmarklet-button:hover::before {
+            left: 100%;
+        }
+        
+        .bookmarklet-button:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 12px 40px rgba(102, 126, 234, 0.6);
+        }
+        
+        .bookmarklet-button:active {
+            transform: translateY(-2px) scale(1.02);
+        }
+        
+        .remove-button {
+            background: linear-gradient(135deg, #dc3545 0%, #e91e63 100%);
+            box-shadow: 0 8px 32px rgba(220, 53, 69, 0.4);
+        }
+        
+        .remove-button:hover {
+            box-shadow: 0 12px 40px rgba(220, 53, 69, 0.6);
+        }
+        
+        .instructions-list {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        .instructions-list ol {
+            list-style: none;
+            counter-reset: step-counter;
+        }
+        
+        .instructions-list li {
+            counter-increment: step-counter;
+            margin-bottom: 16px;
+            padding-left: 60px;
+            position: relative;
+            line-height: 1.6;
+            font-size: 1.1rem;
+        }
+        
+        .instructions-list li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .drag-hint {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 16px;
+            border-radius: 12px;
+            margin: 16px 0;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin: 32px 0;
+        }
+        
+        .feature-card {
+            background: white;
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border: 1px solid #f1f3f4;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        }
+        
+        .feature-card h4 {
+            color: #667eea;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .feature-card p {
+            color: #6c757d;
+            line-height: 1.6;
+        }
+        
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .main-card {
+                padding: 20px;
+                border-radius: 16px;
+            }
+            
+            .step-section {
+                padding: 20px;
+                margin: 20px 0;
+            }
+            
+            .bookmarklet-button {
+                padding: 16px 24px;
+                font-size: 14px;
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .instructions-list li {
+                padding-left: 50px;
+                font-size: 1rem;
+            }
+            
+            .instructions-list li::before {
+                width: 30px;
+                height: 30px;
+                font-size: 14px;
+            }
+        }
+        
+        /* Animations */
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation">
+        <div class="floating-shape"></div>
+        <div class="floating-shape"></div>
+        <div class="floating-shape"></div>
+        <div class="floating-shape"></div>
+    </div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>🔖 Bookmarklets Setup</h1>
+            <p class="subtitle">One-click manga tracking while browsing MangaFire</p>
+        </div>
+        
+        <div class="nav-section">
+            <a href="/manga-tracker" class="nav-link">
+                📋 Back to Management Dashboard
+            </a>
+        </div>
+        
+        <div class="main-card">
+            <div class="step-section">
+                <h3>📚 Add Manga Bookmarklet</h3>
+                <p>Drag this button to your bookmarks bar, then click it on any MangaFire manga page to instantly add it to your tracking list:</p>
+                
+                <div class="drag-hint">
+                    <span>💡</span>
+                    <span><strong>Tip:</strong> Drag the button below directly to your browser's bookmarks bar!</span>
+                </div>
+                
+                <div class="bookmarklet-container">
+                    <a href="javascript:(function(){const url=window.location.href;if(!url.includes('mangafire.to/manga/')){alert('Please run this on a MangaFire manga page!');return;}const titleElement=document.querySelector('h1')||document.querySelector('title');const mangaName=titleElement?titleElement.textContent.trim():'Unknown Manga';const mangaId=url.split('/manga/')[1].split('/')[0].split('?')[0];fetch(window.location.origin.replace('mangafire.to','nadavbendov.top')+'/api',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'add_manga',name:mangaName,url:url,id:mangaId})}).then(response=>response.text()).then(responseText=>{try{const result=JSON.parse(responseText);alert(result.message||'Added successfully!');}catch(e){alert('✅ Added to tracker successfully!');}}).catch(error=>alert('Error: '+error.message));})();" class="bookmarklet-button">
+                        📚 Add to Tracker
+                    </a>
+                </div>
+            </div>
+            
+            <div class="step-section">
+                <h3>🗑️ Remove Manga Bookmarklet</h3>
+                <p>Use this bookmarklet to quickly remove manga from your tracking list while browsing:</p>
+                
+                <div class="bookmarklet-container">
+                    <a href="javascript:(function(){const url=window.location.href;if(!url.includes('mangafire.to/manga/')){alert('Please run this on a MangaFire manga page!');return;}const mangaId=url.split('/manga/')[1].split('/')[0].split('?')[0];if(confirm('Remove this manga from tracking?')){fetch(window.location.origin.replace('mangafire.to','nadavbendov.top')+'/api',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'remove_manga',id:mangaId})}).then(response=>response.text()).then(responseText=>{try{const result=JSON.parse(responseText);alert(result.message||'Removed successfully!');}catch(e){alert('✅ Removed from tracker successfully!');}}).catch(error=>alert('Error: '+error.message));}})();" class="bookmarklet-button remove-button">
+                        🗑️ Remove from Tracker
+                    </a>
+                </div>
+            </div>
+            
+            <div class="step-section">
+                <h3>📖 How to Use</h3>
+                <div class="instructions-list">
+                    <ol>
+                        <li><strong>Drag the bookmarklets</strong> above to your browser's bookmarks bar (usually visible below the address bar)</li>
+                        <li><strong>Navigate to any manga page</strong> on MangaFire.to that you want to track</li>
+                        <li><strong>Click "Add to Tracker"</strong> bookmarklet to start tracking that manga</li>
+                        <li><strong>Receive automatic email notifications</strong> when new chapters are released!</li>
+                    </ol>
+                </div>
+            </div>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>⚡ Instant Tracking</h4>
+                    <p>Add manga to your tracking list with a single click while browsing MangaFire. No need to copy URLs or remember manga names.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h4>📧 Smart Notifications</h4>
+                    <p>Get email alerts the moment new chapters are available. Each notification includes direct links to read the latest chapter.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h4>🔄 Auto-Sync</h4>
+                    <p>Your tracking list automatically syncs across all devices. Add manga on your phone, manage it on your computer.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h4>🎯 Zero Maintenance</h4>
+                    <p>Once set up, the system runs completely automatically. No manual checking required - we handle everything for you.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
